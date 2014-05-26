@@ -1,0 +1,14 @@
+{
+  "name": "github-listener",
+  "version": "0.1.0",
+  "description": "A Node.js server with a single endpoint, to act as a hook for Github events.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Angelo Tata",
+  "license": "MIT",
+  "dependencies": {
+    "restify": "^2.8.1"
+  }
+}
