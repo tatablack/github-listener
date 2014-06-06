@@ -1,8 +1,13 @@
-var restify = require('restify');
+var _ = require('lodash'),
+    restify = require('restify'),
+    GithubEventParser = require('./lib/GithubEventParser');
 
 function handleNotification(req, res, next) {
-    console.log(req.params);
-    res.send(204);
+    var parser = new GithubEventParser();
+
+    res.send(
+        parser.analyze(req.headers, req.params)
+    );
     next();
 }
 
@@ -11,6 +16,6 @@ server.use(restify.bodyParser());
 
 server.post('/notify', handleNotification);
 
-server.listen(3000, function() {
+server.listen(3300, function() {
     console.log('%s listening at %s', server.name, server.url);
 });
