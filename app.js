@@ -15,14 +15,16 @@ nconf.argv().env().file({ file: __dirname + '/config.json' });
 var restifyLog = bunyan.createLogger({
     name: 'RestifyLogger',
     level: 'info',
+    serializers: bunyan.stdSerializers,
     streams: [{
         path: __dirname + '/' + nconf.get('logs').application
     }]
 });
 
 // Data layer initialization
-var storage = new Storage();
+var storage = new Storage(restifyLog);
 storage.init();
+
 
 // Default request handler
 function handleDefault(req, res) {
@@ -31,7 +33,7 @@ function handleDefault(req, res) {
 
 // Default  notification handler
 function handleNotification(req, res, next) {
-    var parser = new GithubEventParser(req.log);
+    var parser = new GithubEventParser(req.log, storage);
 
     res.send(parser.analyze(req.headers, req.params));
     next();
