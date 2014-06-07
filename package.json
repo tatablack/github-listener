@@ -9,7 +9,9 @@
   "author": "Angelo Tata",
   "license": "MIT",
   "dependencies": {
+    "bunyan": "^0.23.1",
     "lodash": "^2.4.1",
+    "nconf": "^0.6.9",
     "restify": "^2.8.1"
   }
 }

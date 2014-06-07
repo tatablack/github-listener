@@ -1,0 +1,5 @@
+{
+    "logs": {
+        "application": "logs/application.log"
+    }
+}
