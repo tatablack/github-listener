@@ -31,9 +31,9 @@ function handleDefault(req, res) {
 
 // Default  notification handler
 function handleNotification(req, res, next) {
-    var parser = new GithubEventParser();
+    var parser = new GithubEventParser(req.log);
 
-    res.send(parser.analyze(req));
+    res.send(parser.analyze(req.headers, req.params));
     next();
 }
 
