@@ -5,11 +5,12 @@ var _ = require('lodash'),
     restify = require('restify'),
     bunyan = require('bunyan'),
     nconf = require('nconf'),
-    Storage = require('./lib/Storage'),
-    GithubEventParser = require('./lib/GithubEventParser');
+    Storage = require('./lib/Storage');
 
 // Load configuration
-nconf.argv().env().file({ file: __dirname + '/config.json' });
+nconf.argv().env().
+    file('config', { file: __dirname + '/config.json' }).
+    file('package', { file: __dirname + '/package.json' });
 
 // Set up logging
 var restifyLog = bunyan.createLogger({
@@ -25,20 +26,6 @@ var restifyLog = bunyan.createLogger({
 var storage = new Storage(restifyLog);
 storage.init();
 
-
-// Default request handler
-function handleDefault(req, res) {
-    res.send(200, 'Github Listener here. Hi, I\'m a webhook!');
-}
-
-// Default  notification handler
-function handleNotification(req, res, next) {
-    var parser = new GithubEventParser(req.log, storage);
-
-    res.send(parser.analyze(req.headers, req.params));
-    next();
-}
-
 // Server initialization
 var server = restify.createServer({ name: 'github-listener', log: restifyLog });
 server.use(restify.bodyParser());
@@ -46,8 +33,18 @@ server.use(restify.gzipResponse());
 server.use(restify.requestLogger());
 
 // Initialize routing
-server.get('/', handleDefault);
-server.post('/notify', handleNotification);
+[
+    '/routes/default',
+    '/routes/ping',
+    '/routes/receiveNotification',
+    '/routes/sendNotifications'
+].forEach(function(route) {
+    require(__dirname + route)({
+        server: server,
+        storage: storage,
+        configuration: nconf
+   });
+});
 
 // Startup
 server.listen(3300, function() {
