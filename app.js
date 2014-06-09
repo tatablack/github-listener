@@ -15,7 +15,7 @@ nconf.argv().env().
 // Set up logging
 var restifyLog = bunyan.createLogger({
     name: 'RestifyLogger',
-    level: 'info',
+    level: 'debug',
     serializers: bunyan.stdSerializers,
     streams: [{
         path: __dirname + '/' + nconf.get('logs').application
