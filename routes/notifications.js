@@ -1,7 +1,14 @@
-var storage;
+var GithubEventParser = require('../lib/GithubEventParser'),
+    storage;
 
-// Default notification handler
-function handleNotifications(req, res, next) {
+function createNotification(req, res, next) {
+    var parser = new GithubEventParser(req.log, storage);
+
+    res.send(parser.analyze(req.headers, req.params));
+    next();
+}
+
+function getNotifications(req, res, next) {
     req.log.debug('Client requesting notifications for %s', req.params.username);
     
     storage.getNotificationsFor(req.params.username).then(function(notifications) {
@@ -18,7 +25,8 @@ function handleNotifications(req, res, next) {
 
 var Setup = function(params) {
     storage = params.storage;
-    params.server.get('/notifications/:username', handleNotifications);
+    params.server.post('/v1/notifications', createNotification);
+    params.server.get('/v1/notifications/:username', getNotifications);
 };
 
 module.exports = Setup;
