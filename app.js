@@ -35,6 +35,7 @@ server.use(restify.requestLogger());
 // Initialize routing
 [
     '/routes/default',
+    '/routes/installations',
     '/routes/notifications'
 ].forEach(function(route) {
     require(__dirname + route)({
