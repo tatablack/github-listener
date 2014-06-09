@@ -25,13 +25,6 @@ function getCapabilities() {
     return capabilities;
 }
 
-function handleRoot(req, res, next) {
-    'use strict';
-    
-    res.send(403);
-    next();
-}
-
 // Default handler
 function handleDefault(req, res, next) {
     res.send(200, getCapabilities());
@@ -41,8 +34,7 @@ function handleDefault(req, res, next) {
 var Setup = function(params) {
     configuration = params.configuration;
     
-    params.server.get('/', handleRoot);
-    params.server.get('/v1', handleDefault);    
+    params.server.get('/v1', handleDefault);
 };
 
 module.exports = Setup;
