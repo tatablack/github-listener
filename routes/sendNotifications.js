@@ -2,10 +2,10 @@ var storage;
 
 // Default notification handler
 function handleNotifications(req, res, next) {
-    req.log.info('Client requesting notifications for %s', req.params.username);
+    req.log.debug('Client requesting notifications for %s', req.params.username);
     
     storage.getNotificationsFor(req.params.username).then(function(notifications) {
-        req.log.info('Sending back %d notifications', notifications.commits.length);
+        req.log.debug('Sending back %d notifications', notifications.commits.length);
         res.send(200, notifications);
     }).
     catch(function(error) {
