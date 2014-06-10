@@ -4,7 +4,16 @@ function handleUserCreation(req, res, next) {
     'use strict';
     
     storage.createUser(req.params).then(function() {
-        res.send(201);
+        res.send(HttpStatusCodes['Created']);
+        next();
+    });
+}
+
+function handleUserUpdate() {
+    'use strict';
+    
+    storage.updateUser(req.params).then(function() {
+        res.send(HttpStatusCodes['No Content']);
         next();
     });
 }
@@ -12,6 +21,7 @@ function handleUserCreation(req, res, next) {
 var Setup = function(params) {
     storage = params.storage;
     
+    params.server.put('/users/:installationId', handleUserUpdate);
     params.server.post('/users', handleUserCreation);
 };
 
