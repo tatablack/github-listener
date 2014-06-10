@@ -1,3 +1,5 @@
+var HttpStatusCodes = require('./HttpStatusCodes');
+
 var configuration,
     capabilities = {
     _links: {
@@ -27,7 +29,7 @@ function getCapabilities() {
 
 // Default handler
 function handleDefault(req, res, next) {
-    res.send(200, getCapabilities());
+    res.send(HttpStatusCodes['Accepted'], getCapabilities());
     next();
 }
 
