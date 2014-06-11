@@ -1,3 +1,5 @@
+/*jshint sub:true */
+
 var HttpStatusCodes = require('../lib/HttpStatusCodes');
 
 var configuration,
