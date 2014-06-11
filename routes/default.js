@@ -1,4 +1,4 @@
-var HttpStatusCodes = require('./HttpStatusCodes');
+var HttpStatusCodes = require('../lib/HttpStatusCodes');
 
 var configuration,
     capabilities = {
@@ -29,7 +29,7 @@ function getCapabilities() {
 
 // Default handler
 function handleDefault(req, res, next) {
-    res.send(HttpStatusCodes['Accepted'], getCapabilities());
+    res.send(HttpStatusCodes['OK'], getCapabilities());
     next();
 }
 

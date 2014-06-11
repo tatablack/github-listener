@@ -1,5 +1,5 @@
 var GithubEventParser = require('../lib/GithubEventParser'),
-    HttpStatusCodes = require('./HttpStatusCodes'),
+    HttpStatusCodes = require('../lib/HttpStatusCodes'),
     storage;
 
 function createNotification(req, res, next) {
@@ -16,7 +16,7 @@ function getNotifications(req, res, next) {
     
     storage.getNotificationsFor(req.params.username).then(function(notifications) {
         req.log.debug('Sending back %d notifications', notifications.commits.length);
-        res.send(HttpStatusCodes['Accepted'], notifications);
+        res.send(HttpStatusCodes['OK'], notifications);
     }).
     catch(function(error) {
         req.log.error({ err: error }, 'github-listener: an error occurred while retrieving notification from the database');
