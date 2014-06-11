@@ -14,16 +14,24 @@ function createNotification(req, res, next) {
 }
 
 function getNotifications(req, res, next) {
+    var notifications = { commits: []};
+    
     if (req.authorization.scheme !== AUTHORIZATION_SCHEME) {
         req.log.debug('Client requesting notifications without the right header.\nThe Authorization header is:\n', req.authorization);
         res.header('WWW-Authenticate', AUTHORIZATION_SCHEME);
         res.send(HttpStatusCodes['Unauthorized']);
         next();
     } else {
-        storage.getNotificationsFor(GitHubListenerAuthentication.getCredentials(req.authorization.credentials)).
-            then(function(notifications) {
-                req.log.debug('Sending back %d notifications', notifications.commits.length);
-                res.send(HttpStatusCodes['OK'], notifications);
+        var installationId = GitHubListenerAuthentication.getCredentials(req.authorization.credentials);
+        
+        storage.getNotificationsFor(installationId).
+            then(function(retrievedNotifications) {
+                notifications = retrievedNotifications;
+                return storage.updateLastseen(installationId);
+            }).
+            then(function() {
+                 req.log.debug('Sending back %d notifications', notifications.commits.length);
+                 res.send(HttpStatusCodes['OK'], notifications);
             }).
             catch(function(error) {
                 req.log.error({ err: error }, 'github-listener: an error occurred while retrieving notification from the database');
