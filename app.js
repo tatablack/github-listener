@@ -28,6 +28,7 @@ storage.init();
 
 // Server initialization
 var server = restify.createServer({ name: 'github-listener', log: restifyLog });
+server.use(restify.authorizationParser());
 server.use(restify.bodyParser());
 server.use(restify.gzipResponse());
 server.use(restify.requestLogger());
