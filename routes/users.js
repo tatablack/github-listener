@@ -1,4 +1,5 @@
-var storage;
+var HttpStatusCodes = require('../lib/HttpStatusCodes'),
+    storage;
 
 function handleUserCreation(req, res, next) {
     'use strict';
@@ -9,7 +10,7 @@ function handleUserCreation(req, res, next) {
     });
 }
 
-function handleUserUpdate() {
+function handleUserUpdate(req, res, next) {
     'use strict';
     
     storage.updateUser(req.params).then(function() {
@@ -21,8 +22,8 @@ function handleUserUpdate() {
 var Setup = function(params) {
     storage = params.storage;
     
-    params.server.put('/users/:installationId', handleUserUpdate);
-    params.server.post('/users', handleUserCreation);
+    params.server.put('/v1/users/:installationId', handleUserUpdate);
+    params.server.post('/v1/users', handleUserCreation);
 };
 
 module.exports = Setup;
