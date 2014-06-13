@@ -7,7 +7,7 @@ var configuration,
     _links: {
         self: {
             href: '/v1',
-            title: 'Starting poing of GitHub Listener API'
+            title: 'Starting point of GitHub Listener API'
         },
 
         notifications: {
