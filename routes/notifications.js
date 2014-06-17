@@ -30,7 +30,7 @@ function getNotifications(req, res, next) {
                 return storage.updateLastseen(installationId);
             }).
             then(function() {
-                 req.log.debug('Sending back %d notifications', notifications.commits.length);
+                 req.log.debug('Sending back %d notifications for %s', notifications.commits.length, installationId);
                  res.send(HttpStatusCodes['OK'], notifications);
             }).
             catch(function(error) {
