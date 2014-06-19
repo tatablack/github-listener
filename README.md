@@ -1,36 +1,12 @@
 # github-listener
 
-Github webhook. Can be used to filter notifications from multiple repositories, and notify interested parties based on different criteria.
+## WebHook
+GitHub instances can communicate to the world when something happens to one of their repositories.
+There's plenty of application-specific "hooks" to deal with such communication, but the most generic one is called just "[WebHooks](https://developer.github.com/webhooks/)".
 
-## Database
-[x] DB storage for push payloads. Need to store Author, commit id, repo, whether a review was required or not.
-[x] Init: create database
-[ ] create table with indexes
-[ ] create tables: payloads, installations, config
-    installations: {
-        username: atata,
-        lastSeen: _timestamp_
-        rules: [
-            'FE': {
-                repo: 'aurora-frontend'
-            }
-        ]
-    }
-    config
-        repo list? Like, every repo who has this set as a webhook? And what for?
-        
+GitHub listener, here, is a WebHook implementation able to receive, parse and store information about commits (it started in a Corporate environment, and currenty GitHub Corporate instalations provide _only_ information about commits).
 
-## Service
-[ ] Websocket server for real time communication, instead of client-side polling (would also make storing information on the server less urgent)
+Every time the Listener receives a JSON payload from GitHub, it enriches the information with a few additional fields and stores it in a local [RethinkDB](http://rethinkdb.com/) instance.
 
-## Receive Notification handler
-[ ] Every time we enrich a commit, use Github's API to get the gravatar based on the username (https://github.scm.corp.ebay.com/api/v3/users/USERNAME)
-[ ] We should use a Promise in the createNotification handler, not delegate the actual response creation to the parser
-[x] Add Lastseen to every payload received
-[ ] Store information about the repository which is sending us notifications (so we'll tell the clients)
-
-
-## Send Notification handler
-[x] Calculate email hash on the server
-[x] Add Lastseen to a client installation when the client retrieves notifications
-[x] Filter notifications based on Lastseen delta
+## API
+It also offers a HTTP API, currently implemented by a Chrome extension called [github-notifier](https://github.scm.corp.ebay.com/atata/github-notifier-chrome/). Every client installation register with the Listener, which will store the client configuration, allowing said client to keep polling the Listener in order to retrieve commits filtered by a set of user-defined criteria (currently, only filtering by @mentions and specific commit authors is supported).
