@@ -4,10 +4,10 @@ var GithubEventParser = require('../lib/GithubEventParser'),
     HttpStatusCodes = require('../lib/HttpStatusCodes'),
     GitHubListenerAuthentication = require('../lib/GitHubListenerAuthentication'),
     AUTHORIZATION_SCHEME = 'GitHubListener',
-    storage;
+    storage, configuration;
 
 function createNotification(req, res, next) {
-    var parser = new GithubEventParser(req.log, storage);
+    var parser = new GithubEventParser(req.log, storage, configuration);
 
     res.send(parser.analyze(req.headers, req.params));
     next();
@@ -44,6 +44,7 @@ function getNotifications(req, res, next) {
 
 var Setup = function(params) {
     storage = params.storage;
+    configuration = params.configuration;
     
     params.server.post('/v1/notifications', createNotification);
     params.server.get('/v1/notifications', getNotifications);

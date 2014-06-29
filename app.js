@@ -9,6 +9,7 @@ var _ = require('lodash'),
 
 // Load configuration
 nconf.argv().env().
+    file('localConfig', { file: __dirname + '/localConfig.json' }).
     file('config', { file: __dirname + '/config.json' }).
     file('package', { file: __dirname + '/package.json' });
 
