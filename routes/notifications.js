@@ -9,7 +9,13 @@ var GithubEventParser = require('../lib/GithubEventParser'),
 function createNotification(req, res, next) {
     var parser = new GithubEventParser(req.log, storage, configuration);
 
-    res.send(parser.analyze(req.headers, req.params));
+    if (parser.supports(req.headers)) {
+        parser.analyze(req.headers, req.params);
+        res.send(HttpStatusCodes['Accepted']);
+    } else {
+        res.send(HttpStatusCodes['Bad Request']);        
+    }
+
     next();
 }
 
