@@ -1,7 +1,8 @@
 'use strict';
 
 // Set up dependencies
-var _ = require('lodash'),
+var fs = require('fs'),
+    _ = require('lodash'),
     restify = require('restify'),
     bunyan = require('bunyan'),
     nconf = require('nconf'),
@@ -50,4 +51,8 @@ server.use(restify.requestLogger());
 // Startup
 server.listen(3300, function() {
     console.log('%s listening at %s', server.name, server.url);
+
+    fs.writeFile(server.name + '.pid', process.pid, function(err) {
+        if (err) throw err;
+    });
 });
