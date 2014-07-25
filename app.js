@@ -39,7 +39,8 @@ server.use(restify.requestLogger());
 [
     '/routes/default',
     '/routes/users',
-    '/routes/notifications'
+    '/routes/notifications',
+    '/routes/websockets'
 ].forEach(function(route) {
     require(__dirname + route)({
         server: server,
