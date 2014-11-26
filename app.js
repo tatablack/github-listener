@@ -6,6 +6,7 @@ var fs = require('fs'),
     restify = require('restify'),
     bunyan = require('bunyan'),
     nconf = require('nconf'),
+    EventEmitter = require('events').EventEmitter,
     Storage = require('./lib/Storage');
 
 // Load configuration
@@ -24,16 +25,22 @@ var restifyLog = bunyan.createLogger({
     }]
 });
 
-// Data layer initialization
-var storage = new Storage(restifyLog);
-storage.init();
-
 // Server initialization
 var server = restify.createServer({ name: 'github-listener', log: restifyLog });
 server.use(restify.authorizationParser());
 server.use(restify.bodyParser());
 server.use(restify.gzipResponse());
 server.use(restify.requestLogger());
+
+// WebSockets server initialization
+var io = require('socket.io')(server, { serveClient: false });
+
+// EventEmitter initialization
+var ee = new EventEmitter();
+
+// Data layer initialization
+var storage = new Storage(restifyLog);
+storage.init(ee);
 
 // Initialize routing
 [
@@ -44,6 +51,8 @@ server.use(restify.requestLogger());
 ].forEach(function(route) {
     require(__dirname + route)({
         server: server,
+        io: io,
+        ee: ee,
         storage: storage,
         configuration: nconf
    });

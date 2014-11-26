@@ -2,7 +2,7 @@
     "logs": {
         "application": "logs/application.log"
     },
-    
+
     "api": {
        "github.com": "https://api.github.com"
     }
